@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>BSV Wallet Generator</title>
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <script 
+        type="text/javascript" 
+        src="https://unpkg.com/bsv@1.5.3/bsv.min.js">
+    </script>
+
+    <script 
+        type="text/javascript" 
+        src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js">
+    </script>
+
+    <script 
+    src="https://unpkg.com/axios/dist/axios.min.js">
+    </script>
+   
+  </head>
+  <body>
+    <div>
+      <a href="index.html">BSV Wallet Generator</a>
+      <a href="live_price.html">Live Prices</a>
+    </div>
+    <h1>BSV Wallet Generator</h1>
+
+    <img id="logo" src="bitcoinsv-logo-1.png" alt="BSV logo" style="width: 224px;height: 40px;" class="center">
+    <div id="block1">
+        <h1>Public Key</h1> 
+        <p id="pubKey"> </p>
+    </div>
+
+    <div id="block2">
+        <h1>Address</h1> 
+        <p id="address"> </p>
+    </div>
+
+    <div id="block3">
+        <h1>QR code</h1>
+        <p id="qrcode"></p>
+    </div>
+   
+    <script> 
+    var privKey = bsv.PrivateKey.fromRandom();  
+    var pubKey = bsv.PublicKey.fromPrivateKey(privKey);
+    var address = bsv.Address.fromPrivateKey(privKey);
+
+    var y = document.querySelector("#pubKey");
+    y.innerHTML = pubKey.toString();
+    
+    var z = document.querySelector("#address");
+    z.innerHTML = address.toString();
+
+    var addressCode = 'bitcoinsv:' + address; 
+    new QRCode(document.getElementById("qrcode"), addressCode);
+
+    var config = {
+    method: 'get',
+    url: "https://api.whatsonchain.com/v1/bsv/main/exchangerate",
+    };
+
+    axios(config)
+    .then(function (response) 
+    {
+    console.log(JSON.stringify(response.data));
+    })
+    .catch(function (error) 
+    {
+    console.log(error);
+    });
+
+     </script>
+  </body>
+</html>
